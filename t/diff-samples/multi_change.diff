@@ -1,0 +1,10 @@
+diff --git a/example/file.txt b/example/file.txt
+index 0000000..0000000 100755
+@@ -19,0 +20 @@ xxxx
++
+@@ -62 +63,2 @@ xxxx
+-
++
++
+@@ -134 +133,0 @@ xxxx
+-

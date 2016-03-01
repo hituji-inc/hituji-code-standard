@@ -1,0 +1,13 @@
+diff --git a/example/file.txt b/example/file.txt
+index 0000000..0000000 100755
+--- a/example/file.txt
++++ b/example/file.txt
+@@ -3,0 +4 @@ xxxx
++
+diff --git a/example/deletion.txt b/example/deletion.txt
+index 0000000..0000000 100755
+--- a/example/deletion.txt
++++ b/example/deletion.txt
+@@ -134,2 +133,0 @@ xxxx
+-
+-
