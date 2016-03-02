@@ -1,5 +1,5 @@
 diff --git a/example/deletion.txt b/example/deletion.txt
-index 0000000..0000000 100755
+index 0000000..0000003 100755
 --- a/example/deletion.txt
 +++ b/example/deletion.txt
 @@ -19 +18,0 @@ xxxx

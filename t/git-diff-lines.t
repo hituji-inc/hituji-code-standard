@@ -78,6 +78,7 @@ sub read_diff_file {
     [
       {
         file => 'example/file.txt',
+        index => '0000002',
         lines => [[4, 1]],
       }
     ],
@@ -88,6 +89,7 @@ sub read_diff_file {
     [
       {
         file => 'example/deletion.txt',
+        index => '0000003',
         lines => [],
       }
     ],
@@ -98,9 +100,11 @@ sub read_diff_file {
     [
       {
         file => 'example/file.txt',
+        index => '0000004',
         lines => [[4, 1]],
       }, {
         file => 'example/deletion.txt',
+        index => '0000005',
         lines => [],
       }
     ],

@@ -34,15 +34,16 @@ sub get_changed_file_lines {
 
   # diff の開始場所とマッチ
   my $diff_start_pattern = qr/(?=^diff --git)/m;
-  # ファイル名
-  my $file_pattern = qr{^\+{3} (.+)$}m;
+  # インデックス
+  my $index_pattern = qr{^index \w+\.\.(\w+)}m;
 
-  my @result = ();
+  # diff テキストからファイル名を取得して返す
+  my $get_file = sub {
+    my ($diff) = @_;
 
-  # diff されたファイルごとに処理
-  foreach my $one_file_diff (split($diff_start_pattern, $diff_text)) {
-    # split されると最初の要素は空文字列になるので飛ばす
-    next unless $one_file_diff =~ $file_pattern;
+    my $file_pattern = qr{^\+{3} (.+)$}m;
+
+    return unless $diff =~ $file_pattern;
 
     my $file = $1;
 
@@ -52,9 +53,26 @@ sub get_changed_file_lines {
     # ファイル名が 'b/' で始まっているので取り除く
     $file =~ s{^b/}{};
 
+    return $file
+  };
+
+  my @result = ();
+
+  # diff されたファイルごとに処理
+  foreach my $one_file_diff (split($diff_start_pattern, $diff_text)) {
+    next unless $one_file_diff =~ $index_pattern;
+
+    my $index = $1;
+
+    # split されると最初の要素は空文字列になるので飛ばす
+    my $file = $get_file->($one_file_diff);
+
+    next unless $file;
+
     # ファイルの情報を追加
     push @result, {
       file => $file,
+      index => $index,
       lines => get_changed_lines($one_file_diff),
     };
   }
