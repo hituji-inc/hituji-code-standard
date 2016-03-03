@@ -27,6 +27,9 @@ GetOptions(
   "verbose" => \$verbose,
   "standard=s" => sub { $phpcs_standard = sprintf('--standard="%s"', $_[1]) });
 
+# オプションに使われなかった引数は検証するファイルのパスとして処理
+my @check_files = @ARGV;
+
 # 行ごとに処理のしやすように出力する phpcs コマンド
 my $phpcs_command = <<"END_COMMAND";
   phpcs \\
@@ -43,9 +46,11 @@ END_COMMAND
 
 # git でステージングに上がっているファイルの変更差分のファイルと行の情報を返します
 sub get_staging_diff {
-  print $git_diff_command if ($verbose);
+  my $command = "$git_diff_command -- @_";
 
-  my $diff_result = `$git_diff_command`;
+  say $command if ($verbose);
+
+  my $diff_result = `$command`;
   my $lines_map = get_changed_file_lines($diff_result);
 
   if ($verbose) {
@@ -100,8 +105,8 @@ sub phpcs_by_diff {
   @phpcs_result
 }
 
-# git diff で得られた範囲に phpcs
-my @phpcs_errors = map { phpcs_by_diff($_) } get_staging_diff();
+# 引数で指定されたファイルを git diff して変更箇所に phpcs
+my @phpcs_errors = map { phpcs_by_diff($_) } get_staging_diff(@check_files);
 
 # エラーを出力
 if (@phpcs_errors) {
