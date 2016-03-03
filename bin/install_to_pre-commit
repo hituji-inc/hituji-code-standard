@@ -1,0 +1,38 @@
+#!/bin/bash
+
+BIN_DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+
+GIT_ROOT=$(git rev-parse --show-toplevel)
+
+if [ -z "$GIT_ROOT" ]; then
+  echo "cannot find the root of git repository";
+  exit 1;
+fi
+
+PRE_COMMIT_HOOK="$GIT_ROOT/.git/hooks/pre-commit"
+
+# フックスクリプトファイルを追加
+if [ ! -e "$PRE_COMMIT_HOOK" ]; then
+  touch "$PRE_COMMIT_HOOK"
+  chmod +x "$PRE_COMMIT_HOOK"
+  printf "#!/bin/bash\n" >> "$PRE_COMMIT_HOOK"
+fi
+
+HEAD_LINE="## installed by hituji-code-standard"
+
+grep -Eq "^$HEAD_LINE" "$PRE_COMMIT_HOOK"
+HEAD_LINE_EXISTS=$?
+
+
+# phpcs スクリプトを追加
+if [ $HEAD_LINE_EXISTS -ne 0 ]; then
+  # phpcs への相対パス
+  PHPCS_PATH=$(python -c "import os.path; print os.path.relpath('$BIN_DIR/phpcs', '$GIT_ROOT')")
+
+  printf "\n%s\n%s\n" "$HEAD_LINE" "$PHPCS_PATH" >> "$PRE_COMMIT_HOOK"
+else
+  echo "already installed"
+  exit 1
+fi
+
+
