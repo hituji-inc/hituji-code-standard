@@ -11,7 +11,11 @@ STANDARD_FILE="$DIR/phpcs-standard.xml"
 
 
 # 変更されたファイルのうち phpcs にかけるファイルを指定
-git diff --cached --name-only \
+PHPFILES=$(git diff --cached --name-only \
   | grep -i -e "\.\($PHPCS_EXTENSIONS\)$" -e "^\".+\.\($PHPCS_EXTENSIONS\)\"$" \
-  | tr '\n' '\0' \
-  | xargs -0 perl $MAIN_SCRIPT --standard="$STANDARD_FILE" --
+  | tr '\n' ' ')
+
+# チェックすべき php ファイルが存在している時だけ実行する
+if [ ! -z "$PHPFILES" ]; then
+  perl $MAIN_SCRIPT --standard="$STANDARD_FILE" -- $PHPFILES
+fi
