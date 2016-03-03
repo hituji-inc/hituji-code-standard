@@ -7,8 +7,6 @@ use v5.10;
 use FindBin qw($Bin);
 use lib "$Bin", "$Bin/../lib";
 
-use List::Util qw(any);
-
 use Data::Dumper;
 use Getopt::Long;
 
