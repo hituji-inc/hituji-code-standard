@@ -3,7 +3,15 @@
 # refs: http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
 DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
 
+# phpcs で検証するファイルの拡張子
+PHPCS_EXTENSIONS="php\|inc"
+
 MAIN_SCRIPT="$DIR/src/main.pl"
 STANDARD_FILE="$DIR/phpcs-standard.xml"
 
-perl $MAIN_SCRIPT --standard="$STANDARD_FILE"
+
+# 変更されたファイルのうち phpcs にかけるファイルを指定
+git diff --cached --name-only \
+  | grep -i -e "\.\($PHPCS_EXTENSIONS\)$" -e "^\".+\.\($PHPCS_EXTENSIONS\)\"$" \
+  | tr '\n' '\0' \
+  | xargs -0 perl $MAIN_SCRIPT --standard="$STANDARD_FILE" --
