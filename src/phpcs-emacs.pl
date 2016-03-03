@@ -4,7 +4,7 @@ use utf8;
 use strict;
 use warnings;
 
-use List::Util qw(any);
+use List::Util qw(first);
 use Data::Dumper;
 
 # emacs 書式の phpcs のエラーが指定の行範囲に入っているかを返します
@@ -16,12 +16,14 @@ sub error_within_line {
   my $line_num = $1;
 
   # 行範囲に含まれているかを検証
-  any {
+  my $element = first {
     my $start = $_->[0];
     my $end = $start + $_->[1];
 
     return $start <= $line_num && $line_num < $end
-  } @filter_lines
+  } @filter_lines;
+
+  defined($element)
 }
 
 # STDIN となっている phpcs エラーのファイル名を置き換えます
