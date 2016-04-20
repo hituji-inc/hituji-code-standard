@@ -80,6 +80,9 @@ sub phpcs_by_diff {
   # blob を phpcs にかける
   my @phpcs_result = phpcs_by_blob_index($blob_index);
 
+  # phpcs の実行に失敗したら終了
+  exit 1 if ($? != 0);
+
   if ($verbose) {
     local $Data::Dumper::Varname = 'original_phpcs_result';
     print Dumper(\@phpcs_result);
