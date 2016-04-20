@@ -29,11 +29,7 @@ GetOptions(
 my @check_files = @ARGV;
 
 # 行ごとに処理のしやすように出力する phpcs コマンド
-my $phpcs_command = <<"END_COMMAND";
-  phpcs \\
-    --report=emacs --no-colors --encoding=utf-8 \\
-    $phpcs_standard \\
-END_COMMAND
+my $phpcs_command = "bash '$Bin/phpcs.sh' $phpcs_standard";
 
 # ステージ上のファイルと HEAD との変更差分を得る git diff コマンド
 my $git_diff_command = <<"END_COMMAND";
