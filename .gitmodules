@@ -1,0 +1,3 @@
+[submodule "lib/PHP_CodeSniffer"]
+	path = lib/PHP_CodeSniffer
+	url = https://github.com/squizlabs/PHP_CodeSniffer.git
