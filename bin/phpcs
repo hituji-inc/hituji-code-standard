@@ -6,11 +6,9 @@ DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
 # 規約ファイル（指定がなければ標準のものを使う）
 export PHPCS_STANDARD=${PHPCS_STANDARD:-"$DIR/phpcs-standard.xml"}
 
-diff_script="$DIR/src/git-diff-staging-files.sh"
-
 # 利用する phpcs バイナリ
 export PHPCS_BIN="${PHPCS_BIN:-$DIR/lib/PHP_CodeSniffer/scripts/phpcs}"
 
 # 差分情報をスクリプトに渡して phpcs 結果を得る
-bash "$diff_script" \
+bash "$DIR/src/git-diff-staging-files.sh" \
   | perl "$DIR/src/main.pl" --standard="$PHPCS_STANDARD"
