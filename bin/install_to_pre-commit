@@ -4,6 +4,7 @@ base_dir="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
 
 GIT_ROOT=$(git rev-parse --show-toplevel)
 
+# git リポジトリが見つからないと終了
 if [ -z "$GIT_ROOT" ]; then
   echo "cannot find the root of git repository";
   exit 1;
@@ -18,10 +19,11 @@ if [ ! -e "$PRE_COMMIT_HOOK" ]; then
   printf "#!/bin/bash\n" >> "$PRE_COMMIT_HOOK"
 fi
 
+# 自動挿入のマーカー文字列
 install_start_line="## START hituji-code-standard"
 install_end_line="## END hituji-code-standard"
 
-# phpcs スクリプトを追加
+# フックスクリプト内にマーカーを設定
 if ! grep -Eq "^$install_start_line" "$PRE_COMMIT_HOOK"; then
   printf "\n%s\n%s\n" "$install_start_line" "$install_end_line" >> "$PRE_COMMIT_HOOK"
 fi
@@ -29,11 +31,5 @@ fi
 # phpcs スクリプトへの相対パス
 PHPCS_PATH=$(python -c "import os.path; print os.path.relpath('$base_dir/bin/phpcs', '$GIT_ROOT')")
 
-# phpcs バイナリへの相対パス
-PHPCS_BIN=$(python -c "import os.path; print os.path.relpath('$base_dir/lib/PHP_CodeSniffer/scripts/phpcs', '$GIT_ROOT')")
-
-# phpcs バイナリ環境設定
-export_phpcs_bin="export PHPCS_BIN=\"${PHPCS_BIN}\""
-
 # インストール内容を置き換え
-perl -0pe "s{(?<=$install_start_line\n)(?:.*)(?=$install_end_line)}{$export_phpcs_bin\n$PHPCS_PATH\n}gs" -i "$PRE_COMMIT_HOOK"
+perl -0pe "s{(?<=$install_start_line\n)(?:.*)(?=$install_end_line)}{$PHPCS_PATH\n}gs" -i "$PRE_COMMIT_HOOK"
