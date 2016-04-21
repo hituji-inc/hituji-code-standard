@@ -23,19 +23,13 @@ my $phpcs_standard = '';
 # 変数とオプション処理
 GetOptions(
   "verbose" => \$verbose,
-  "standard=s" => sub { $phpcs_standard = sprintf('--standard="%s"', $_[1]) });
-
-# 行ごとに処理のしやすように出力する phpcs コマンド
-my $phpcs_command = "bash '$Bin/phpcs.sh' $phpcs_standard";
+  "standard=s" => \$phpcs_standard);
 
 # 指定した git のインデックスの phpcs 結果を返します
 sub phpcs_by_blob_index {
   my ($blob_index) = @_;
 
-  my $staged_file = "git cat-file blob $blob_index";
-  my $command =
-    "$staged_file |\\\n" .
-    "  $phpcs_command";
+  my $command = "bash '$Bin/phpcs-git-blob.sh' '$blob_index' '$phpcs_standard'";
 
   print $command if ($verbose);
 
