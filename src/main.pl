@@ -44,6 +44,11 @@ sub phpcs_by_blob_index {
   # phpcs の実行に失敗したら終了
   exit 1 if ($? != 0);
 
+  if ($verbose) {
+    local $Data::Dumper::Varname = 'phpcs_by_blob_index';
+    print Dumper(\@result);
+  }
+
   return @result
 }
 
@@ -53,11 +58,6 @@ sub phpcs_by_diff {
 
   # blob を phpcs にかける
   my @phpcs_result = phpcs_by_blob_index($blob_index);
-
-  if ($verbose) {
-    local $Data::Dumper::Varname = 'original_phpcs_result';
-    print Dumper(\@phpcs_result);
-  }
 
   # 変更された範囲のエラーを抽出
   @phpcs_result = grep { error_within_line($_, @$diff_lines) } @phpcs_result;
