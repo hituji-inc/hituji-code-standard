@@ -39,7 +39,12 @@ sub phpcs_by_blob_index {
 
   print $command if ($verbose);
 
-  `$command`
+  my @result = `$command`;
+
+  # phpcs の実行に失敗したら終了
+  exit 1 if ($? != 0);
+
+  return @result
 }
 
 # diff の情報から phpcs を実行して結果を返します
@@ -48,9 +53,6 @@ sub phpcs_by_diff {
 
   # blob を phpcs にかける
   my @phpcs_result = phpcs_by_blob_index($blob_index);
-
-  # phpcs の実行に失敗したら終了
-  exit 1 if ($? != 0);
 
   if ($verbose) {
     local $Data::Dumper::Varname = 'original_phpcs_result';
