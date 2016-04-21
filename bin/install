@@ -11,7 +11,10 @@ if [ -z "$GIT_ROOT" ]; then
 fi
 
 # phpcs のインストール
-(cd "$base_dir" && git submodule --quiet update --init -- lib/PHP_CodeSniffer)
+(cd "$base_dir" && git submodule update --init -- lib/PHP_CodeSniffer)
+
+# フックスクリプトの構築
+printf "set up git pre-commit hook... "
 
 # スクリプトの組み込み先フック
 PRE_COMMIT_HOOK="$GIT_ROOT/.git/hooks/pre-commit"
@@ -37,3 +40,5 @@ PHPCS_PATH=$(python -c "import os.path; print os.path.relpath('$base_dir/bin/php
 
 # インストール内容を置き換え
 perl -0pe "s{(?<=$install_start_line\n)(?:.*)(?=$install_end_line)}{$PHPCS_PATH\n}gs" -i "$PRE_COMMIT_HOOK"
+
+echo "done."
