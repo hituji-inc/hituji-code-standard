@@ -44,11 +44,7 @@ sub phpcs_by_blob_index {
 
 # diff の情報から phpcs を実行して結果を返します
 sub phpcs_by_diff {
-  my ($diff) = @_;
-
-  my $blob_index = $diff->{index};
-  my @diff_lines = @{$diff->{lines}};
-  my $file_path = $diff->{file};
+  my ($file_path, $blob_index, $diff_lines) = @_;
 
   # blob を phpcs にかける
   my @phpcs_result = phpcs_by_blob_index($blob_index);
@@ -62,7 +58,7 @@ sub phpcs_by_diff {
   }
 
   # 変更された範囲のエラーを抽出
-  @phpcs_result = grep { error_within_line($_, @diff_lines) } @phpcs_result;
+  @phpcs_result = grep { error_within_line($_, @$diff_lines) } @phpcs_result;
 
   # 標準入力での phpcs でファイル名が STDIN となっているのを本来の名前に置き換え
   @phpcs_result = replace_error_file_name($file_path, @phpcs_result);
@@ -79,7 +75,8 @@ sub phpcs_by_diff {
 my $no_unified_diff_text = do { local $/; <STDIN> };
 
 # 引数で指定されたファイルを git diff して変更箇所に phpcs
-my @phpcs_errors = map { phpcs_by_diff($_) }
+my @phpcs_errors =
+  map { phpcs_by_diff($_->{file}, $_->{index}, $_->{lines}) }
   @{get_changed_file_lines($no_unified_diff_text)};
 
 # エラーを出力
