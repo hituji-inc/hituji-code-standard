@@ -25,35 +25,8 @@ GetOptions(
   "verbose" => \$verbose,
   "standard=s" => sub { $phpcs_standard = sprintf('--standard="%s"', $_[1]) });
 
-# オプションに使われなかった引数は検証するファイルのパスとして処理
-my @check_files = @ARGV;
-
 # 行ごとに処理のしやすように出力する phpcs コマンド
 my $phpcs_command = "bash '$Bin/phpcs.sh' $phpcs_standard";
-
-# ステージ上のファイルと HEAD との変更差分を得る git diff コマンド
-my $git_diff_command = <<"END_COMMAND";
-  git diff \\
-    --cached --no-color --diff-filter=ACMR --unified=0 \\
-END_COMMAND
-
-
-# git でステージングに上がっているファイルの変更差分のファイルと行の情報を返します
-sub get_staging_diff {
-  my $command = "$git_diff_command -- @_";
-
-  say $command if ($verbose);
-
-  my $diff_result = `$command`;
-  my $lines_map = get_changed_file_lines($diff_result);
-
-  if ($verbose) {
-    local $Data::Dumper::Varname = 'git_diff_lines';
-    print Dumper($lines_map);
-  }
-
-  return @$lines_map
-}
 
 # 指定した git のインデックスの phpcs 結果を返します
 sub phpcs_by_blob_index {
@@ -102,8 +75,12 @@ sub phpcs_by_diff {
   @phpcs_result
 }
 
+# 標準入力から diff 情報を受ける
+my $no_unified_diff_text = do { local $/; <STDIN> };
+
 # 引数で指定されたファイルを git diff して変更箇所に phpcs
-my @phpcs_errors = map { phpcs_by_diff($_) } get_staging_diff(@check_files);
+my @phpcs_errors = map { phpcs_by_diff($_) }
+  @{get_changed_file_lines($no_unified_diff_text)};
 
 # エラーを出力
 if (@phpcs_errors) {

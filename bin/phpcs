@@ -3,19 +3,12 @@
 # refs: http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
 DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
 
-# phpcs で検証するファイルの拡張子
-PHPCS_EXTENSIONS="php\|inc"
-
 MAIN_SCRIPT="$DIR/src/main.pl"
 STANDARD_FILE="$DIR/phpcs-standard.xml"
 
+diff_script="$DIR/src/git-diff-staging-files.sh"
 
-# 変更されたファイルのうち phpcs にかけるファイルを指定
-PHPFILES=$(git diff --cached --name-only \
-  | grep -i -e "\.\($PHPCS_EXTENSIONS\)$" -e "^\".+\.\($PHPCS_EXTENSIONS\)\"$" \
-  | tr '\n' ' ')
 
-# チェックすべき php ファイルが存在している時だけ実行する
-if [ ! -z "$PHPFILES" ]; then
-  perl $MAIN_SCRIPT --standard="$STANDARD_FILE" -- $PHPFILES
-fi
+# 差分情報をスクリプトに渡して phpcs 結果を得る
+bash "$diff_script" \
+  | perl $MAIN_SCRIPT --standard="$STANDARD_FILE"
