@@ -10,6 +10,10 @@ if [ -z "$GIT_ROOT" ]; then
   exit 1;
 fi
 
+# phpcs のインストール
+(cd "$base_dir" && git submodule --quiet update --init -- lib/PHP_CodeSniffer)
+
+# スクリプトの組み込み先フック
 PRE_COMMIT_HOOK="$GIT_ROOT/.git/hooks/pre-commit"
 
 # フックスクリプトファイルを追加
