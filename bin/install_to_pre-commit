@@ -1,8 +1,8 @@
 #!/bin/bash
+# 第一引数は導入先の git リポジトリ（省略時は現在ディレクトリ）
+GIT_ROOT=${1:-$(git rev-parse --show-toplevel)}
 
 base_dir="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
-
-GIT_ROOT=$(git rev-parse --show-toplevel)
 
 # git リポジトリが見つからないと終了
 if [ -z "$GIT_ROOT" ]; then
