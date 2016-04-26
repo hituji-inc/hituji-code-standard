@@ -15,7 +15,7 @@
   </rule>
 
   <!-- 関数の使用を禁止 -->
-  <rule ref="Squiz.PHP.ForbiddenFunctions">
+  <rule ref="Generic.PHP.ForbiddenFunctions">
     <properties>
       <property name="forbiddenFunctions" type="array" value="var_dump=>null,print_r=>null"/>
     </properties>
