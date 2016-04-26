@@ -9,9 +9,6 @@
 
     <!-- App::uses を利用すると宣言ファイルと副作用の分離ができていない警告が出るのを抑制 -->
     <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
-
-    <!-- テストメソッドの名前が test_ で始まることを許すため -->
-    <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
   </rule>
 
   <!-- 関数の使用を禁止 -->
@@ -19,5 +16,10 @@
     <properties>
       <property name="forbiddenFunctions" type="array" value="var_dump=>null,print_r=>null"/>
     </properties>
+  </rule>
+
+  <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+    <!-- テストファイルのメソッドの名前が test_ で始まることを許す -->
+    <exclude-pattern>Test/Case/*Test.php</exclude-pattern>
   </rule>
 </ruleset>
