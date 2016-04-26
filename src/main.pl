@@ -31,7 +31,7 @@ sub phpcs_by_blob_index {
 
   my $command = "bash '$Bin/phpcs-git-blob.sh' '$blob_index' '$phpcs_standard'";
 
-  print $command if ($verbose);
+  say $command if ($verbose);
 
   my @result = `$command`;
 
