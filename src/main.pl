@@ -27,9 +27,9 @@ GetOptions(
 
 # 指定した git のインデックスの phpcs 結果を返します
 sub phpcs_by_blob_index {
-  my ($blob_index) = @_;
+  my ($blob_index, $file_path) = @_;
 
-  my $command = "bash '$Bin/phpcs-git-blob.sh' '$blob_index' '$phpcs_standard'";
+  my $command = "bash '$Bin/phpcs-git-blob.sh' '$blob_index' '$phpcs_standard' '$file_path'";
 
   say $command if ($verbose);
 
@@ -51,13 +51,10 @@ sub phpcs_by_diff {
   my ($file_path, $blob_index, $diff_lines) = @_;
 
   # blob を phpcs にかける
-  my @phpcs_result = phpcs_by_blob_index($blob_index);
+  my @phpcs_result = phpcs_by_blob_index($blob_index, $file_path);
 
   # 変更された範囲のエラーを抽出
   @phpcs_result = grep { error_within_line($_, @$diff_lines) } @phpcs_result;
-
-  # 標準入力での phpcs でファイル名が STDIN となっているのを本来の名前に置き換え
-  @phpcs_result = replace_error_file_name($file_path, @phpcs_result);
 
   if ($verbose) {
     local $Data::Dumper::Varname = 'filtered_phpcs_result';
