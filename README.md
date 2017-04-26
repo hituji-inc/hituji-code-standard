@@ -42,7 +42,7 @@ git commit --no-verify
 
 PHP_CodeSniffer の実行には `lib/PHP_CodeSniffer/scripts/phpcs` を使います。git サブモジュールです。環境変数 `PHPCS_BIN` で指定することができます。
 
-`phpcs` は標準で付属の `phpcs-standard.xml` ファイルの内容で検証を行います。規則ファイルは環境変数 `PHPCS_STANDARD` で指定ができます。
+`phpcs` は標準で付属の `phpcs-standard.xml` ファイルの内容で検証を行います。対象リポジトリーにのルートディレクトリーに `phpcs-standard.xml` ファイルがあるとそれを利用します。規則ファイルは環境変数 `PHPCS_STANDARD` で指定ができます。
 
 ### 検証の例外
 

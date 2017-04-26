@@ -6,9 +6,6 @@ git_target_dir=$1
 # refs: http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
 DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
 
-# 規約ファイル（指定がなければ標準のものを使う）
-export PHPCS_STANDARD=${PHPCS_STANDARD:-"$DIR/phpcs-standard.xml"}
-
 # 利用する phpcs バイナリ
 export PHPCS_BIN="${PHPCS_BIN:-$DIR/lib/PHP_CodeSniffer/scripts/phpcs}"
 
@@ -21,6 +18,18 @@ fi
 # 実行する git のディレクトリが指定されているときはそこで実行する
 if [ -n $git_target_dir ]; then
   cd "$git_target_dir"
+fi
+
+# 規約ファイル
+if [ -z "$PHPCS_STANDARD" ]; then
+  GIT_ROOT=${git_target_dir:-$(git rev-parse --show-toplevel)}
+  # リポジトリー置いてある phpcs-standard.xml ファイルを規約に利用する
+  if [ -e "$GIT_ROOT/phpcs-standard.xml" ]; then
+    PHPCS_STANDARD="$GIT_ROOT/phpcs-standard.xml"
+  else
+    # 指定がなければ標準のものを使う
+    PHPCS_STANDARD="$DIR/phpcs-standard.xml"
+  fi
 fi
 
 # 差分情報をスクリプトに渡して phpcs 結果を得る
