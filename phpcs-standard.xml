@@ -14,7 +14,7 @@
   <!-- 関数の使用を禁止 -->
   <rule ref="Generic.PHP.ForbiddenFunctions">
     <properties>
-      <property name="forbiddenFunctions" type="array" value="var_dump=>null,print_r=>null"/>
+      <property name="forbiddenFunctions" type="array" value="var_dump=>null,print_r=>null,debug=>null"/>
     </properties>
   </rule>
 
