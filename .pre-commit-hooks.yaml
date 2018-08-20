@@ -1,0 +1,5 @@
+- id: phpcs
+  name: Check Codes with PHP CodeSniffer
+  entry: bin/phpcs
+  language: script
+  pass_filenames: false
