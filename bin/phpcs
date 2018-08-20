@@ -7,7 +7,7 @@ git_target_dir=$1
 DIR="$( cd "$( dirname "$(dirname "${BASH_SOURCE[0]}")" )" && pwd )"
 
 # 利用する phpcs バイナリ
-export PHPCS_BIN="${PHPCS_BIN:-$DIR/lib/PHP_CodeSniffer/scripts/phpcs}"
+export PHPCS_BIN="${PHPCS_BIN:-$DIR/lib/PHP_CodeSniffer/bin/phpcs}"
 
 # 見つからないときはエラーで終了
 if ! hash "$PHPCS_BIN" 2>/dev/null; then
