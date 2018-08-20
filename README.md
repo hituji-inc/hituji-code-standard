@@ -12,14 +12,34 @@ Git にステージングされている変更箇所がコード規約に則っ�
 
 ## インストール
 
-`bin/install` を実行することで、git のコミット時にコード検証を行うようになります。インストール方法は 2 つあります。ひとつめはインストール先の git リポジトリに移動してインストールスクリプトを実行します。以下に例を示します。
+インストール方法は大きく 2 つあります。ひとつは [pre-commit フレームワーク](https://pre-commit.com) を利用する方法です。もうひとつは `bin/install` を実行する方法です。
+
+### pre-commit で利用する
+
+開発用マシンに [pre-commit をインストール](https://pre-commit.com/#install)します。インストールされたら git フックに pre-commit をインストールさせます。次のコマンドでインストールできます。
+
+```console
+$ pre-commit install
+```
+
+`pre-commit run` を実行すると、このリポジトリーがインストールされますので、1度次のコマンド実行してください。
+
+```console
+$ pre-commit run phpcs
+```
+
+これで pre-commit を利用してフックが実行されるようになりました。
+
+### インストールスクリプトを利用する
+
+付属のインストールスクリプトから `.git/hooks/pre-commit` に実行コードがインストールされ、git のコミット時にコード検証を行うようになります。インストール先の git リポジトリに移動してインストールスクリプトを実行してください。以下に例を示します。
 
 ```
 $ cd /some/repository
 $ /home/my/hituji-code-standard/bin/install
 ```
 
-ふたつめはインストール先を指定する方法です。
+または、インストール先を指定することもできます。
 
 ```
 $ /home/my/hituji-code-standard/bin/install /some/repository
